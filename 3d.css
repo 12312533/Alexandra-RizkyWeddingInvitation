@@ -1,0 +1,375 @@
+/* ==========================================================================
+   3d.css  —  Lapisan tampilan 3D untuk undangan pernikahan
+   --------------------------------------------------------------------------
+   Dimuat SETELAH style.css. Tidak mengubah satu pun aturan di file asli;
+   hanya menimpa/menambah. Hapus <link> ke file ini untuk kembali ke desain 2D.
+
+   Daftar isi
+     0. Token & kanvas WebGL
+     1. Tipografi 3D (ekstrusi emas)
+     2. Cover (pintu 3D yang terbuka)
+     3. Hero (kedalaman berlapis)
+     4. Kartu, kedalaman & kilau (tilt)
+     5. Tombol 3D (bisa "ditekan")
+     6. Countdown (papan flip)
+     7. Timeline, dress code, galeri, lightbox
+     8. Reveal 3D saat scroll
+     9. Elemen kecil (progress bar, ikon emas, floating button)
+    10. Responsif & aksesibilitas
+   ========================================================================== */
+
+/* ---------- 0. TOKEN & KANVAS WEBGL ---------- */
+:root {
+    --ex: 0;               /* arah ekstrusi teks (diatur JS mengikuti pointer) */
+    --ey: 1;
+    --ease-depth: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fx-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+}
+.fx-canvas.is-ready { opacity: 1; }
+
+/* Adegan global: berada di belakang seluruh konten */
+.fx-global { position: fixed; inset: 0; z-index: -1; }
+/* Adegan cover: di atas overlay, di bawah teks */
+.fx-fixed { position: fixed; inset: 0; z-index: 1; }
+/* Adegan hero & penutup */
+.fx-inside { position: absolute; inset: 0; z-index: 1; }
+.fx-fixed.is-ready, .fx-inside.is-ready { opacity: 0.92; }
+
+/* Saat WebGL aktif, latar selang-seling dibuat agak tembus agar adegan 3D terlihat */
+html.webgl-on .bg-alt { background-color: rgba(247, 236, 233, 0.76); }
+
+/* ---------- 1. TIPOGRAFI 3D ---------- */
+/* Judul besar: wajah putih + ekstrusi emas yang arahnya mengikuti pointer */
+.hero-title,
+.cover-title {
+    text-shadow:
+        calc(var(--ex) * 1px) calc(var(--ey) * 1px) 0 #ead7a0,
+        calc(var(--ex) * 2px) calc(var(--ey) * 2px) 0 #e0c680,
+        calc(var(--ex) * 3px) calc(var(--ey) * 3px) 0 #d4b565,
+        calc(var(--ex) * 4px) calc(var(--ey) * 4px) 0 #c9a24b,
+        calc(var(--ex) * 5px) calc(var(--ey) * 5px) 0 #b8923f,
+        calc(var(--ex) * 6px) calc(var(--ey) * 6px) 0 #a68336,
+        calc(var(--ex) * 7px) calc(var(--ey) * 7px) 0 #94742d,
+        calc(var(--ex) * 8px) calc(var(--ey) * 8px) 0 #826524,
+        calc(var(--ex) * 16px) calc(var(--ey) * 16px) 24px rgba(20, 2, 6, 0.55);
+}
+.closing-names {
+    text-shadow:
+        0 1px 0 #c9a24b, 0 2px 0 #b8923f, 0 3px 0 #a68336, 0 4px 0 #94742d,
+        0 5px 0 #826524, 0 12px 20px rgba(20, 2, 6, 0.55);
+}
+
+/* Judul seksi: huruf maroon dengan tepi emas timbul */
+.section-title {
+    text-shadow:
+        0 1px 0 #f3e6bf, 0 2px 0 rgba(201, 162, 75, 0.95), 0 3px 0 rgba(154, 118, 42, 0.9),
+        0 4px 0 rgba(122, 90, 26, 0.65), 0 10px 18px rgba(79, 13, 25, 0.22);
+}
+.bg-maroon .section-title,
+.closing .section-title {
+    text-shadow:
+        0 1px 0 #c9a24b, 0 2px 0 #a98334, 0 3px 0 #826524, 0 4px 0 #5d4518,
+        0 10px 18px rgba(0, 0, 0, 0.45);
+}
+.nav-logo { text-shadow: 0 1px 0 #c9a24b, 0 2px 0 #9a762a, 0 3px 6px rgba(0, 0, 0, 0.45); }
+footer h3 { text-shadow: 0 1px 0 #9a762a, 0 2px 0 #6d531a, 0 6px 10px rgba(0, 0, 0, 0.4); }
+
+/* ---------- 2. COVER ---------- */
+.cover-page { overflow-x: hidden; }
+
+.cover-content { transform-style: preserve-3d; will-change: transform; }
+.cover-subtitle { transform: translateZ(30px); }
+.cover-title    { transform: translateZ(80px); transform-style: preserve-3d; }
+.cover-date     { transform: translateZ(40px); }
+.guest-info     { transform: translateZ(55px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.cover-content .btn-gold { transform: translateZ(70px); }
+.cover-content .btn-gold:hover  { transform: translateZ(70px) translateY(-2px); }
+.cover-content .btn-gold:active { transform: translateZ(70px) translateY(3px); }
+
+.cover-frame {
+    box-shadow: inset 0 0 0 1px rgba(232, 210, 154, 0.18), inset 0 0 40px rgba(0, 0, 0, 0.35), 0 0 0 6px rgba(53, 8, 17, 0.35);
+    transition: transform 0.2s linear;
+}
+
+/* Buka undangan: cover berayun naik seperti pintu/tirai 3D */
+.cover-page { transform-origin: 50% 0; }
+.cover-page.slide-up {
+    transform: perspective(1600px) rotateX(-78deg) translateY(-18%);
+    opacity: 0;
+}
+
+/* ---------- 3. HERO ---------- */
+.hero { perspective: 1200px; perspective-origin: 50% 42%; }
+.hero-bg-video { will-change: transform; transform: scale(1.08); }
+.hero-content { transform-style: preserve-3d; will-change: transform, opacity; }
+.hero-title { transform-style: preserve-3d; }
+.hero-title > span:nth-child(1) { transform: translateZ(40px); }
+.hero-title > .amp               { transform: translateZ(95px); }
+.hero-title > span:nth-child(3) { transform: translateZ(40px); }
+.hero-subtitle, .hero-date { transform: translateZ(30px); }
+.hero .gold-divider, .closing .gold-divider { transform: translateZ(55px); }
+
+.closing { perspective: 1200px; }
+.closing .hero-content { transform-style: preserve-3d; will-change: transform; }
+
+/* ---------- 4. KARTU, KEDALAMAN & KILAU ---------- */
+.info-card, .event-card, .gift-card, .timeline-content, .countdown-item, .form-card { position: relative; }
+
+.info-card, .event-card, .gift-card, .form-card, .timeline-content, .wish-card {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 2px 0 rgba(201, 162, 75, 0.28),
+        0 26px 40px -16px rgba(79, 13, 25, 0.32),
+        0 8px 14px rgba(79, 13, 25, 0.08);
+}
+
+/* Aktif setelah kartu pertama kali disentuh pointer (lihat 3d.js) */
+[data-tilt][data-tilt][data-tilt] {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: box-shadow 0.3s ease;
+}
+[data-tilt].is-tilting {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 2px 0 rgba(201, 162, 75, 0.35),
+        calc(var(--nx, 0) * -22px) calc(30px + var(--ny, 0) * -12px) 44px -14px rgba(79, 13, 25, 0.42);
+}
+/* Isi kartu "menyembul" keluar saat dimiringkan */
+[data-tilt] .info-icon, [data-tilt] .event-icon, [data-tilt] .gift-icon,
+[data-tilt] h3, [data-tilt] h4, [data-tilt] .info-highlight,
+[data-tilt] .event-time, [data-tilt] .account-number,
+[data-tilt] .btn-secondary { transition: transform 0.35s var(--ease-depth); }
+[data-tilt].is-tilting .info-icon, [data-tilt].is-tilting .event-icon, [data-tilt].is-tilting .gift-icon { transform: translateZ(46px); }
+[data-tilt].is-tilting h3, [data-tilt].is-tilting .info-highlight { transform: translateZ(30px); }
+[data-tilt].is-tilting h4, [data-tilt].is-tilting .event-time, [data-tilt].is-tilting .account-number { transform: translateZ(22px); }
+[data-tilt].is-tilting .btn-secondary { transform: translateZ(34px); }
+
+.tilt-glare { display: none; }
+[data-tilt] > .tilt-glare {
+    display: block;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(520px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 55%);
+    mix-blend-mode: soft-light;
+}
+[data-tilt].is-tilting > .tilt-glare { opacity: 1; }
+
+.countdown-item { transform-style: preserve-3d; }
+.video-container { box-shadow: 0 30px 50px -18px rgba(79, 13, 25, 0.5), 0 0 0 1px rgba(201, 162, 75, 0.35); }
+
+/* ---------- 5. TOMBOL 3D ---------- */
+.btn-primary:not(.btn-gold) {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.12));
+    box-shadow: 0 5px 0 var(--maroon-900), 0 14px 22px rgba(79, 13, 25, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.btn-primary:not(.btn-gold):hover {
+    box-shadow: 0 7px 0 var(--maroon-900), 0 18px 28px rgba(79, 13, 25, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.btn-gold {
+    box-shadow: 0 5px 0 #9a762a, 0 14px 24px rgba(201, 162, 75, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.btn-gold:hover { box-shadow: 0 7px 0 #9a762a, 0 18px 30px rgba(201, 162, 75, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.btn-secondary {
+    box-shadow: 0 4px 0 rgba(201, 162, 75, 0.6), 0 10px 16px rgba(79, 13, 25, 0.12);
+}
+.btn-secondary:hover { box-shadow: 0 4px 0 var(--maroon-900), 0 12px 18px rgba(79, 13, 25, 0.22); }
+
+.btn-primary:active, .btn-secondary:active { transform: translateY(3px); }
+.btn-primary:not(.btn-gold):active { box-shadow: 0 2px 0 var(--maroon-900), 0 6px 10px rgba(79, 13, 25, 0.25); }
+.btn-gold:active { box-shadow: 0 2px 0 #9a762a, 0 6px 12px rgba(201, 162, 75, 0.4); }
+.btn-secondary:active { box-shadow: 0 1px 0 rgba(201, 162, 75, 0.6), 0 4px 8px rgba(79, 13, 25, 0.12); }
+
+/* ---------- 6. COUNTDOWN (papan flip) ---------- */
+.bg-maroon { position: relative; overflow: hidden; }
+.bg-maroon > .container { position: relative; z-index: 1; }
+/* Lantai grid emas bergerak ke arah penonton */
+.bg-maroon::before {
+    content: '';
+    position: absolute;
+    left: -30%; right: -30%; bottom: -8%;
+    height: 62%;
+    background-image:
+        linear-gradient(rgba(232, 210, 154, 0.24) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 210, 154, 0.24) 1px, transparent 1px);
+    background-size: 56px 56px;
+    transform: perspective(380px) rotateX(64deg);
+    transform-origin: 50% 100%;
+    -webkit-mask-image: linear-gradient(to top, #000 8%, transparent 88%);
+    mask-image: linear-gradient(to top, #000 8%, transparent 88%);
+    pointer-events: none;
+    animation: gridRun 6s linear infinite;
+}
+@keyframes gridRun { to { background-position: 0 56px, 56px 0; } }
+
+.countdown-wrapper { perspective: 900px; }
+.countdown-item {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
+    box-shadow: 0 10px 0 -4px rgba(0, 0, 0, 0.28), 0 24px 34px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(232, 210, 154, 0.45);
+}
+/* Garis lipatan di tengah angka, seperti papan flip */
+.countdown-item::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(22px + 1.5rem);
+    height: 2px;
+    background: rgba(0, 0, 0, 0.38);
+    box-shadow: 0 1px 0 rgba(232, 210, 154, 0.25);
+    z-index: 2;
+    pointer-events: none;
+}
+.countdown-item span {
+    backface-visibility: hidden;
+    transform-origin: 50% 100%;
+    text-shadow: 0 1px 0 #b8902f, 0 2px 0 #9a762a, 0 3px 0 #7a5a1a, 0 10px 16px rgba(0, 0, 0, 0.5);
+}
+.countdown-item span.flip { animation: flipIn 0.6s var(--ease-depth); }
+@keyframes flipIn {
+    0%   { transform: perspective(520px) rotateX(-88deg); opacity: 0; }
+    55%  { opacity: 1; }
+    100% { transform: perspective(520px) rotateX(0deg); opacity: 1; }
+}
+
+/* ---------- 7. TIMELINE, DRESS CODE, GALERI, LIGHTBOX ---------- */
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 3px; margin-left: -1.5px;
+    height: calc(var(--tl-p, 0) * 100%);
+    background: linear-gradient(var(--gold-light), var(--gold));
+    box-shadow: 0 0 14px rgba(201, 162, 75, 0.85);
+    border-radius: 3px;
+    z-index: 1;
+}
+.timeline-dot {
+    background: radial-gradient(circle at 32% 30%, #f6e6b6 0%, var(--gold) 38%, var(--maroon) 100%);
+    border: 3px solid var(--gold-light);
+    box-shadow: 0 0 0 5px rgba(201, 162, 75, 0.22), 0 7px 10px rgba(53, 8, 17, 0.4), inset -3px -4px 6px rgba(0, 0, 0, 0.35);
+}
+.timeline-dot::after {
+    content: '';
+    position: absolute; inset: -9px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 162, 75, 0.7);
+    animation: dotPulse 2.6s ease-out infinite;
+}
+@keyframes dotPulse { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(1.5); opacity: 0; } }
+
+/* Dress code: swatch menjadi bola mengilap yang melayang */
+.swatch {
+    background-image: radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 46%);
+    box-shadow: inset -7px -9px 14px rgba(0, 0, 0, 0.28), inset 5px 6px 10px rgba(255, 255, 255, 0.3), 0 14px 18px -4px rgba(79, 13, 25, 0.35);
+    animation: bob 3.6s ease-in-out infinite;
+}
+.swatch:nth-child(2) { animation-delay: -0.7s; }
+.swatch:nth-child(3) { animation-delay: -1.4s; }
+.swatch:nth-child(4) { animation-delay: -2.1s; }
+.swatch:nth-child(5) { animation-delay: -2.8s; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.gallery-grid { perspective: 1400px; }
+.gallery-item { box-shadow: 0 18px 30px -12px rgba(79, 13, 25, 0.45); }
+
+.lightbox { perspective: 1400px; }
+.lightbox-content.swap { animation: lbSwap 0.65s var(--ease-depth); }
+@keyframes lbSwap {
+    from { transform: rotateY(-30deg) scale(0.86) translateZ(-90px); opacity: 0; }
+    to   { transform: rotateY(0) scale(1) translateZ(0); opacity: 1; }
+}
+
+/* ---------- 8. REVEAL 3D SAAT SCROLL ---------- */
+html.js3d.js .section-reveal {
+    opacity: 0;
+    transform: perspective(1500px) translate3d(0, 50px, -90px) rotateX(6deg);
+    transform-origin: 50% 0;
+    transition: opacity 0.9s ease, transform 1s var(--ease-depth);
+}
+html.js3d.js .section-reveal.active { opacity: 1; transform: none; }
+
+/* Elemen anak masuk bergantian dari kedalaman (kelas diatur 3d.js) */
+html.js3d .r3d {
+    opacity: 0;
+    transform: perspective(1000px) translate3d(var(--x0, 0px), 46px, -90px) rotateX(14deg) rotateY(var(--ry0, 0deg));
+    transition: opacity 0.7s ease var(--d, 0ms), transform 0.9s var(--ease-depth) var(--d, 0ms);
+}
+html.js3d .r3d.in { opacity: 1; transform: none; }
+html.js3d .timeline-item:nth-child(odd).r3d  { --x0: -60px; --ry0: 24deg; }
+html.js3d .timeline-item:nth-child(even).r3d { --x0: 60px;  --ry0: -24deg; }
+
+/* ---------- 9. ELEMEN KECIL ---------- */
+#scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold));
+    box-shadow: 0 0 10px rgba(201, 162, 75, 0.8);
+    z-index: 1100;
+    pointer-events: none;
+}
+
+/* Ikon emas bergradasi (hanya jika browser mendukung) */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .info-icon, .event-icon, .gift-icon {
+        background: linear-gradient(135deg, #f6e6b6 0%, #c9a24b 48%, #8a6823 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        filter: drop-shadow(0 4px 3px rgba(79, 13, 25, 0.28));
+    }
+}
+
+.float-btn {
+    background-image: radial-gradient(circle at 30% 25%, #9b2335, var(--maroon) 55%, var(--maroon-900));
+    box-shadow: 0 4px 0 #1f0409, 0 12px 20px rgba(53, 8, 17, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.32);
+}
+.float-btn:hover { background-image: radial-gradient(circle at 30% 25%, #f6e6b6, var(--gold) 60%, #9a762a); }
+.float-btn.show:active { transform: translateY(3px); box-shadow: 0 1px 0 #1f0409, 0 6px 10px rgba(53, 8, 17, 0.4); }
+
+.modal-content { box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.55); }
+
+/* ---------- 10. RESPONSIF & AKSESIBILITAS ---------- */
+@media (max-width: 1024px) {
+    .timeline::before { left: 31px; }
+    html.js3d .timeline-item:nth-child(odd).r3d  { --x0: 40px; --ry0: -18deg; }
+    html.js3d .timeline-item:nth-child(even).r3d { --x0: 40px; --ry0: -18deg; }
+}
+
+@media (max-width: 767px) {
+    .countdown-item::before { top: calc(16px + 1rem); }
+    .hero-title, .cover-title {
+        text-shadow:
+            calc(var(--ex) * 1px) calc(var(--ey) * 1px) 0 #e0c680,
+            calc(var(--ex) * 2px) calc(var(--ey) * 2px) 0 #d4b565,
+            calc(var(--ex) * 3px) calc(var(--ey) * 3px) 0 #c9a24b,
+            calc(var(--ex) * 4px) calc(var(--ey) * 4px) 0 #b8923f,
+            calc(var(--ex) * 5px) calc(var(--ey) * 5px) 0 #a68336,
+            calc(var(--ex) * 6px) calc(var(--ey) * 6px) 0 #94742d,
+            calc(var(--ex) * 10px) calc(var(--ey) * 10px) 16px rgba(20, 2, 6, 0.55);
+    }
+    .bg-maroon::before { background-size: 40px 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bg-maroon::before, .swatch, .timeline-dot::after, .countdown-item span.flip, .lightbox-content.swap { animation: none; }
+    html.js3d.js .section-reveal, html.js3d .r3d { opacity: 1; transform: none; transition: none; }
+    .cover-page.slide-up { transform: translateY(-100%); }
+    .cover-content, .hero-content, .hero-bg-video { transform: none !important; }
+}

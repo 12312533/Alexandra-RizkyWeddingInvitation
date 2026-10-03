@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4F0D19">
+    <meta name="description" content="Undangan pernikahan Alexandra Putri & Rizky Pratama - 12 Desember 2026">
+    <title>The Wedding of Alexandra & Rizky</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="3d.css">
+</head>
+<body class="locked-scroll">
+
+    <!-- COVER PAGE -->
+    <div id="cover-page" class="cover-page">
+        <div class="cover-overlay"></div>
+        <div class="cover-frame"></div>
+        <div class="cover-content">
+            <p class="cover-subtitle">The Wedding of</p>
+            <h1 class="cover-title">Alexandra<span class="amp">&amp;</span>Rizky</h1>
+            <p class="cover-date">12 • 12 • 2026</p>
+
+            <div class="guest-info">
+                <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
+                <h3 id="guest-name">Tamu Undangan</h3>
+            </div>
+
+            <button id="btn-open-invitation" class="btn-primary btn-gold">
+                <i class="ph ph-envelope-open"></i> Buka Undangan
+            </button>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">A &amp; R</a>
+            <button class="hamburger" aria-label="Buka menu" aria-expanded="false">
+                <i class="ph ph-list"></i>
+            </button>
+            <nav class="nav-links" id="nav-links">
+                <a href="#hero">Home</a>
+                <a href="#details">Details</a>
+                <a href="#story">Story</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#rsvp">RSVP</a>
+                <a href="#gift">Gift</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- HERO SECTION (VIDEO PRE-WEDDING) -->
+        <section id="hero" class="hero hero-video">
+            <video id="hero-video" class="hero-bg-video"
+                   autoplay muted loop playsinline preload="metadata"
+                   poster="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1920&q=80">
+                <source src="video/prewedding.webm" type="video/webm">
+                <source src="prewed.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <p class="hero-subtitle">The Wedding Of</p>
+                <h1 class="hero-title">
+                    <span>Alexandra Putri</span>
+                    <span class="amp">&amp;</span>
+                    <span>Rizky Pratama</span>
+                </h1>
+                <div class="gold-divider" aria-hidden="true"><i class="ph-fill ph-heart"></i></div>
+                <p class="hero-date">Sabtu, 12 Desember 2026</p>
+            </div>
+            <a href="#details" class="scroll-down" aria-label="Gulir ke bawah">
+                <i class="ph ph-caret-double-down"></i>
+            </a>
+        </section>
+
+        <!-- SPECIAL DAY INFO -->
+        <section id="details" class="section-padding section-reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Our Special Day</h2>
+                <div class="info-card">
+                    <i class="ph ph-calendar-heart info-icon"></i>
+                    <h3>Saturday</h3>
+                    <p class="info-highlight">12 December 2026</p>
+                    <p>08.00 WIB – Selesai</p>
+
+                    <hr class="card-sep">
+
+                    <i class="ph ph-map-pin info-icon"></i>
+                    <h3>Grand Ballroom Jakarta</h3>
+                    <p>Jl. Contoh No. 123, Jakarta Selatan</p>
+                    <a href="#" id="btn-maps" target="_blank" rel="noopener" class="btn-secondary mt-3">Lihat Lokasi</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN -->
+        <section id="countdown" class="section-padding bg-maroon section-reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Counting Down</h2>
+                <div class="countdown-wrapper" id="countdown-timer">
+                    <div class="countdown-item">
+                        <span id="cd-days">00</span>
+                        <p>Hari</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="cd-hours">00</span>
+                        <p>Jam</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="cd-minutes">00</span>
+                        <p>Menit</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="cd-seconds">00</span>
+                        <p>Detik</p>
+                    </div>
+                </div>
+                <h3 id="cd-arrived" class="hidden arrived-text">The Day Has Arrived</h3>
+            </div>
+        </section>
+
+        <!-- EVENT RUNDOWN -->
+        <section id="event" class="section-padding section-reveal">
+            <div class="container">
+                <h2 class="section-title text-center">Wedding Details</h2>
+                <div class="event-grid">
+                    <div class="event-card">
+                        <i class="ph ph-rings event-icon"></i>
+                        <h3>Akad Nikah / Pemberkatan</h3>
+                        <p class="event-time">08.00 – 10.00 WIB</p>
+                        <p class="event-location">Grand Ballroom Jakarta</p>
+                        <p class="event-desc">Momen sakral penyatuan dua insan dalam ikatan suci.</p>
+                    </div>
+                    <div class="event-card">
+                        <i class="ph ph-champagne event-icon"></i>
+                        <h3>Resepsi Pernikahan</h3>
+                        <p class="event-time">11.00 – 14.00 WIB</p>
+                        <p class="event-location">Grand Ballroom Jakarta</p>
+                        <p class="event-desc">Merayakan kebahagiaan bersama keluarga dan sahabat.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRESSCODE -->
+        <section id="dresscode" class="section-padding bg-alt section-reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Dress Code</h2>
+                <p class="mb-4">Mohon berkenan mengenakan nuansa maroon, putih, dan emas.</p>
+                <div class="color-swatches">
+                    <div class="swatch" style="background-color: #6D0F1F;" title="Maroon"></div>
+                    <div class="swatch" style="background-color: #9B2335;" title="Merah Anggur"></div>
+                    <div class="swatch swatch-light" style="background-color: #FFFFFF;" title="Putih"></div>
+                    <div class="swatch" style="background-color: #C9A24B;" title="Emas"></div>
+                    <div class="swatch" style="background-color: #E8D29A;" title="Emas Muda"></div>
+                </div>
+                <p class="mt-3 font-italic">Maroon · White · Gold</p>
+            </div>
+        </section>
+
+        <!-- LOVE STORY -->
+        <section id="story" class="section-padding section-reveal">
+            <div class="container">
+                <h2 class="section-title text-center">Our Story</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>2021</h3>
+                            <h4>First Meet</h4>
+                            <p>"Everything started from a simple meeting."</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>2022</h3>
+                            <h4>Getting Closer</h4>
+                            <p>"We started discovering how much we enjoyed being together."</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>2024</h3>
+                            <h4>The Proposal</h4>
+                            <p>"A beautiful question with a beautiful answer."</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>2026</h3>
+                            <h4>The Wedding</h4>
+                            <p>"And now, we begin our forever."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section id="gallery" class="section-padding bg-alt section-reveal">
+            <div class="container">
+                <h2 class="section-title text-center">Our Gallery</h2>
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Images injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIDEO -->
+        <section id="video" class="section-padding section-reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Our Moments</h2>
+                <div class="video-container">
+                    <video controls playsinline preload="metadata" poster="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80">
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung pemutar video.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section id="rsvp" class="section-padding bg-alt section-reveal">
+            <div class="container">
+                <h2 class="section-title text-center">RSVP</h2>
+                <p class="text-center mb-4">Mohon konfirmasi kehadiran Anda di hari bahagia kami.</p>
+                <div class="form-card">
+                    <form id="rsvp-form">
+                        <div class="form-group">
+                            <label for="rsvp-name">Nama Lengkap</label>
+                            <input type="text" id="rsvp-name" required placeholder="Masukkan nama Anda" autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="rsvp-status">Kehadiran</label>
+                            <select id="rsvp-status" required>
+                                <option value="" disabled selected>Pilih status kehadiran</option>
+                                <option value="Hadir">Akan Hadir</option>
+                                <option value="Tidak Hadir">Tidak Dapat Hadir</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rsvp-guest">Jumlah Tamu</label>
+                            <select id="rsvp-guest" required>
+                                <option value="1">1 Orang</option>
+                                <option value="2">2 Orang</option>
+                                <option value="3">3 Orang</option>
+                                <option value="4">4 Orang</option>
+                                <option value="5">5 Orang</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary w-100">Kirim Konfirmasi</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- WISHES -->
+        <section id="wishes" class="section-padding section-reveal">
+            <div class="container">
+                <h2 class="section-title text-center">Wishes</h2>
+                <div class="form-card mb-4">
+                    <form id="wishes-form">
+                        <div class="form-group">
+                            <label for="wish-name">Nama</label>
+                            <input type="text" id="wish-name" required placeholder="Nama Anda" maxlength="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="wish-message">Ucapan &amp; Doa</label>
+                            <textarea id="wish-message" rows="4" required placeholder="Tulis ucapan dan doa Anda..." maxlength="400"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-100">Kirim Ucapan</button>
+                    </form>
+                </div>
+                <div class="wishes-container" id="wishes-list">
+                    <!-- Wishes injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- GIFT -->
+        <section id="gift" class="section-padding bg-alt section-reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Wedding Gift</h2>
+                <p class="mb-4 lead-text">Kehadiran Anda adalah hadiah terbaik bagi kami. Namun jika berkenan memberikan tanda kasih, kami menyediakan pilihan berikut.</p>
+
+                <div class="gift-grid">
+                    <!-- Bank Transfer -->
+                    <div class="gift-card">
+                        <i class="ph ph-bank gift-icon"></i>
+                        <h3>Bank BCA</h3>
+                        <p class="account-number" id="bca-number">1234567890</p>
+                        <p class="account-name">A/N ALEXANDRA PUTRI</p>
+                        <button class="btn-secondary btn-copy" data-copy="bca-number">Salin No. Rekening</button>
+                    </div>
+
+                    <!-- E-Wallet -->
+                    <div class="gift-card">
+                        <i class="ph ph-wallet gift-icon"></i>
+                        <h3>GoPay / DANA</h3>
+                        <p class="account-number" id="wallet-number">081234567890</p>
+                        <p class="account-name">A/N RIZKY PRATAMA</p>
+                        <button class="btn-secondary btn-copy" data-copy="wallet-number">Salin Nomor</button>
+                    </div>
+
+                    <!-- QRIS -->
+                    <div class="gift-card">
+                        <i class="ph ph-qr-code gift-icon"></i>
+                        <h3>QRIS</h3>
+                        <p class="account-name">Pindai untuk mengirim hadiah</p>
+                        <button class="btn-secondary" id="btn-show-qr">Lihat QR</button>
+                    </div>
+                </div>
+
+                <!-- Physical Gift -->
+                <div class="gift-card mt-4 mx-auto gift-wide">
+                    <i class="ph ph-package gift-icon"></i>
+                    <h3>Kirim Kado</h3>
+                    <p class="account-name">Alexandra &amp; Rizky</p>
+                    <p id="address-text" class="mb-3">Jl. Contoh No. 123, Jakarta Selatan, Indonesia</p>
+                    <button class="btn-secondary btn-copy" data-copy="address-text">Salin Alamat</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- THANK YOU -->
+        <section class="closing" id="closing">
+            <div class="hero-overlay"></div>
+            <div class="hero-content text-center">
+                <h2 class="section-title">Thank You</h2>
+                <p class="closing-quote">"Terima kasih telah menjadi bagian dari hari istimewa kami."</p>
+                <div class="gold-divider" aria-hidden="true"><i class="ph-fill ph-heart"></i></div>
+                <h3 class="closing-names">Alexandra &amp; Rizky</h3>
+                <p class="closing-date">12 • 12 • 2026</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container text-center">
+            <h3>Alexandra &amp; Rizky</h3>
+            <p>© 2026 • Dibuat dengan cinta.</p>
+        </div>
+    </footer>
+
+    <!-- FLOATING BUTTONS -->
+    <div class="floating-controls">
+        <button id="btn-music" class="float-btn" aria-label="Putar atau jeda musik">
+            <i class="ph ph-music-notes"></i>
+        </button>
+        <button id="btn-totop" class="float-btn" aria-label="Kembali ke atas">
+            <i class="ph ph-arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop preload="none">
+        <source src="Westlife - I Lay My Love on You (Lyrics).mp3" type="audio/ogg">
+    </audio>
+
+    <!-- MODALS -->
+    <!-- RSVP Modal -->
+    <div id="modal-rsvp" class="modal" role="dialog" aria-modal="true" aria-labelledby="rsvp-modal-title">
+        <div class="modal-content text-center">
+            <h2 class="section-title" id="rsvp-modal-title">Terima Kasih!</h2>
+            <p>Konfirmasi Anda telah kami terima.</p>
+            <button class="btn-primary mt-4 close-modal">Tutup</button>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="modal-qr" class="modal" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+        <div class="modal-content text-center">
+            <button class="close-modal-icon close-modal" aria-label="Tutup">&times;</button>
+            <h2 class="section-title" id="qr-modal-title">Scan QRIS</h2>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&amp;data=WeddingGiftAlexandraRizky" alt="QRIS" class="qr-img">
+        </div>
+    </div>
+
+    <!-- Lightbox Gallery -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Galeri foto">
+        <button class="lightbox-close" aria-label="Tutup">&times;</button>
+        <button class="lightbox-prev" aria-label="Foto sebelumnya"><i class="ph ph-caret-left"></i></button>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="Foto galeri">
+        <button class="lightbox-next" aria-label="Foto berikutnya"><i class="ph ph-caret-right"></i></button>
+    </div>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+    <script src="3d.js"></script>
+    <script src="3d-webgl.js"></script>
+    <script src="3d-flowers.js"></script>
+</body>
+</html>
